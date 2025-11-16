@@ -25,6 +25,8 @@ pipeline {
                 script {
                     env.GIT_COMMIT_SHORT = sh(script: "set -x ; git rev-parse --short HEAD", returnStdout: true).trim()
                     env.GIT_COMMIT = sh(script: "set -x ; git rev-parse HEAD", returnStdout: true).trim()
+                    env.TIMESTAMP = sh(script: "date '+%Y%m%d-%H%M%S'", returnStdout: true).trim()
+
                 }
                 sh '''
                   |mkdir -p $WORKSPACE/bin
