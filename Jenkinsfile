@@ -3,8 +3,7 @@ def EXECUTOR_LABEL = 'docker'
 pipeline {
     parameters {
         booleanParam(name: 'DryRun', defaultValue: false, description: 'Set this TRUE when you want to just test the pipeline')
-        string(name: 'branch', defaultValue: '**/main', description: 'Git Branch to run the job' )
-        gitParameter(type: 'PT_BRANCH', name: 'BR', branchFilter: 'origin/(.*)', defaultValue: 'main',
+        gitParameter(type: 'PT_BRANCH', name: 'BRANCH', branchFilter: 'origin/(.*)', defaultValue: 'main',
                 description: 'Choose a branch to checkout', selectedValue: 'DEFAULT', sortMode: 'DESCENDING_SMART')
     }
     options {
@@ -15,7 +14,7 @@ pipeline {
         ansiColor('xterm')
     }
     environment {
-        DEBIAN_VERSION = '12'
+        DEBIAN_VERSION = '13'
     }
     agent { label EXECUTOR_LABEL }
     stages {
