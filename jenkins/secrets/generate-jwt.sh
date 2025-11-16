@@ -3,10 +3,12 @@
 set -o pipefail
 
 app_id=$1 # App ID as first argument
-pem=$( cat $2 ) # file path of the private key as second argument
+pem=$( cat "$2" ) # file path of the private key as second argument
 
 now=$(date +%s)
+# shellcheck disable=SC2004
 iat=$((${now} - 60)) # Issues 60 seconds in the past
+# shellcheck disable=SC2004
 exp=$((${now} + 600)) # Expires 10 minutes in the future
 
 b64enc() { openssl base64 | tr -d '=' | tr '/+' '_-' | tr -d '\n'; }
