@@ -1,0 +1,58 @@
+services:
+  jenkins:
+    build: ./controller
+    restart: always
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - /vagrant/jenkins-data:/var/jenkins_home:rw
+      - /vagrant/casc.d:/var/jenkins_home/casc.d/:ro
+      # Mounting the ssh private key as "container secret" makes it available in JCasc as the variable ${SSH_AGENT_KEY}
+      - /vagrant/secrets/id_jenkins.pem:/run/secrets/SSH_AGENT_KEY:ro
+      #- ./secrets/converted-github-app.pem:GITHUB_APP_KEY:ro
+    environment:
+      - JENKINS_EXT_URL=http://localhost:8080
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/casc.d/
+      - org.jenkinsci.plugins.durabletask.BourneShellScript.LAUNCH_DIAGNOSTICS=true
+      - PUBLIC_IP
+      # - JENKINS_OPTS=-Djenkins.install.runSetupWizard=false
+    # entrypoint:
+    #   - /bin/bash
+    #   - -c
+    #   - sleep 7200
+
+  jenkins-agent:
+    platform: linux/amd64
+    # Use official Jenkins DinD (Docker-in-Docker) agent
+    # Provides SSH connectivity and Docker socket access for CI/CD
+    image: jenkins/ssh-agent:latest-jdk21
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /vagrant/jenkins-agent-data:/home/jenkins:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBpNqXQ4x7fPPUBbYPxKF77Zqq6d35iPCD2chg644OUD noone@localhost.local
+
+  redhat-buildenv:
+    platform: linux/amd64
+    # Use official Jenkins DinD (Docker-in-Docker) agent
+    # Provides SSH connectivity and Docker socket access for CI/CD
+    image: redhat-buildenv:latest
+    build: ./redhat
+    entrypoint:
+      - /bin/bash
+      - -c
+      - sleep 1
+
+  ubuntu-buildenv:
+    platform: linux/amd64
+    # Use official Jenkins DinD (Docker-in-Docker) agent
+    # Provides SSH connectivity and Docker socket access for CI/CD
+    image: ubuntu-buildenv:latest
+    build: ./ubuntu
+    entrypoint:
+      - /bin/bash
+      - -c
+      - sleep 1

@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Module for executing local shell commands during provisioning
+module LocalCommand
+  # Configuration class for local shell command provisioner
+  # @attr_accessor [String] command The shell command to execute locally
+  class Config < Vagrant.plugin('2', :config)
+    attr_accessor :command
+  end
+
+  # Plugin class to register the local shell provisioner
+  # Defines the plugin name and configures the provisioner
+  class Plugin < Vagrant.plugin('2')
+    name "local_shell"
+
+    config(:local_shell, :provisioner) do
+      Config
+    end
+
+    provisioner(:local_shell) do
+      Provisioner
+      end
+  end
+
+  # Provisioner class that executes the configured local shell command
+  # @attr_reader [Config] config The provisioner configuration
+  class Provisioner < Vagrant.plugin('2', :provisioner)
+    def provision
+      result = system "#{config.command}"
+    end
+  end
+end
+
+# Main Vagrant configuration block
+# Sets up a Debian 12 VM with PHP, MySQL, Postfix, and Docker
+Vagrant.configure("2") do |config|
+  name = 'jenkins-pkg-test'
+  config.vm.define "#{name}" do |subconfig|
+    subconfig.vm.box = "generic/debian12"
+  	subconfig.vm.boot_timeout = 600
+	  subconfig.vm.guest = :linux
+	
+  	subconfig.vm.network "forwarded_port", guest: 8080, host: 9080
+	#subconfig.vm.network "forwarded_port", guest: 9002, host: 9002
+  	subconfig.vm.provider "virtualbox" do |v|
+	    v.check_guest_additions = false
+	    v.memory = 12800
+  	  v.cpus = 3
+	  end
+    # subconfig.vm.synced_folder './', '/vagrant', type: 'rsync'
+    subconfig.vm.synced_folder './', '/vagrant'
+	  subconfig.vm.provider "libvirt" do |l|
+	    l.memory = 12800
+	    l.cpus = 3
+	end
+    config.vm.provision :shell, path: "provision.sh"
+	$script = <<-SCRIPT
+    SCRIPT
+	subconfig.vm.provision :shell, inline: $script
+#      subconfig.vm.provision "Collect-hotst", type: "local_shell", command: "./create_hosts_file_entries.sh"
+#	  subconfig.vm.provision :ansible do |ansible|
+#	    ansible.playbook = "test-node.yml"
+#        ansible.compatibility_mode = "auto"
+#	    ansible.extra_vars = "test-vars.yml"
+#	    ansible.vault_password_file = "a_password_file"
+##        ansible.raw_arguments = ['-vvvv']
+#	    ansible.groups = {
+#	    "test-node" => ["#{name}"]
+#	    }
+#	  end
+  end
+end
