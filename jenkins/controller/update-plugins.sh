@@ -1,14 +1,14 @@
 #!/bin/bash -x
-JENKINS_HOST=admin:butler@jenkins:8080
-cd jenkins/controller/
+JENKINS_HOST=admin:ChangeMe@jenkins:8080
+cd jenkins/controller/ || exit 1
 
 curl -O "http://$JENKINS_HOST/jnlpJars/jenkins-cli.jar"
 UPDATE_LIST=$( java -jar jenkins-cli.jar -s http://$JENKINS_HOST/ list-plugins | grep -e ')$' | awk '{ print $1 }' );
 
-if [ ! -z "${UPDATE_LIST}" ]; then
-    echo Updating Jenkins Plugins: ${UPDATE_LIST};
+if [ -n "${UPDATE_LIST}" ]; then
+    echo "Updating Jenkins Plugins: ${UPDATE_LIST}"
     # No such command -f -f ./plugins.txt
-    java -jar jenkins-cli.jar -s "http://$JENKINS_HOST/" install-plugin ${UPDATE_LIST};
+    java -jar jenkins-cli.jar -s "http://$JENKINS_HOST/" install-plugin "${UPDATE_LIST}"
     # java -jar jenkins-cli.jar -s http://$JENKINS_HOST/ install-plugin ${UPDATE_LIST} -deploy -restart;
     cat updated_plugins.txt
 fi

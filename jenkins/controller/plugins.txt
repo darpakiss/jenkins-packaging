@@ -1,1 +1,4 @@
 git-parameter
+docker-plugin
+docker-workflow
+ansicolor

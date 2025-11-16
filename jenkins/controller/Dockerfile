@@ -7,16 +7,15 @@ FROM ghcr.io/jenkins-docs/quickstart-tutorials/jenkinsci-tutorials:simple_contro
 USER root
 
 # Project-specific jobs (Poor man's JCasC)
-COPY --chown=jenkins:jenkins ./FirstJob /usr/share/jenkins/ref/jobs/FirstJob
-#COPY --chown=jenkins:jenkins ./MultiBranchAndroidPipeline /usr/share/jenkins/ref/jobs/MultiBranchAndroidPipeline
-#COPY --chown=jenkins:jenkins ./AutoUpdaterMultiBranches /usr/share/jenkins/ref/jobs/AutoUpdaterMultiBranches
-#COPY --chown=jenkins:jenkins ./PublishAppToGitHubAndGoogle /usr/share/jenkins/ref/jobs/PublishAppToGitHubAndGoogle
+COPY --chown=jenkins:jenkins ./Build-Configurator /usr/share/jenkins/ref/jobs/Build-Configurator
+COPY --chown=jenkins:jenkins ./plugins.txt /opt
 
 # SSH known_hosts setup for SSH agent connections
 # Required to avoid: [SSH] No Known Hosts file was found at /var/jenkins_home/.ssh/known_hosts
 RUN mkdir -p /var/jenkins_home/.ssh/ && \
     touch /var/jenkins_home/.ssh/known_hosts && \
-    chown -R jenkins:jenkins /var/jenkins_home/.ssh/
+    chown -R jenkins:jenkins /var/jenkins_home/.ssh/ && \
+    java -jar /opt/jenkins-plugin-manager.jar --plugin-file /opt/plugins.txt --verbose
 
 # Switch back to jenkins user
 USER jenkins
