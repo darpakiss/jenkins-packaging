@@ -63,14 +63,10 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    stages{
-                        stage('Build DEB package') {
-                            steps {
-                                sh '''
-                                  |echo "Build"
-                                '''.stripMargin('|')
-                            }
-                        }
+                    steps {
+                        sh '''
+                             |echo "Build"
+                        '''.stripMargin('|')
                     }
                 }
                 stage('RedHat packaging') {
@@ -80,14 +76,10 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    stages{
-                        stage('Build RPM package') {
-                            steps {
-                                sh '''
-                                  |echo "Build"
-                                '''.stripMargin('|')
-                            }
-                        }
+                    steps {
+                        sh '''
+                          |echo "Build"
+                        '''.stripMargin('|')
                     }
                 }
             }
@@ -101,14 +93,10 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    stages{
-                        stage('Test DEB package') {
-                            steps {
-                                sh '''
-                                  |echo "Test"
-                                '''.stripMargin('|')
-                            }
-                        }
+                    steps {
+                        sh '''
+                          |echo "Test"
+                        '''.stripMargin('|')
                     }
                 }
                 stage('RedHat test') {
@@ -118,14 +106,10 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    stages{
-                        stage('Test RPM package') {
-                            steps {
-                                sh '''
-                                  |echo "Build"
-                                '''.stripMargin('|')
-                            }
-                        }
+                    steps {
+                        sh '''
+                          |echo "Build"
+                        '''.stripMargin('|')
                     }
                 }
             }

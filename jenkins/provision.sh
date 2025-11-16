@@ -17,6 +17,8 @@ apt-get clean && apt-get autoclean && rm -rf /var/lib/apt/lists/*
 
 usermod -aG docker vagrant
 echo -e "function docker-compose {\n  docker compose \"\$@\"\n}" > /etc/profile.d/docker-compose.sh
+DOCKER_GROUP=$(getent group docker|cut -f3 -d":")
+sed -i "s/^DOCKER_GROUP=.*/DOCKER_GROUP=${DOCKER_GROUP}/" /vagrant/.env
 
 mkdir -pv /vagrant/jenkins-data /vagrant/jenkins-agent-data
 chown -Rv 1000:1000 /vagrant/jenkins-data /vagrant/jenkins-agent-data

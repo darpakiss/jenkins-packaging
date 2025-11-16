@@ -27,7 +27,10 @@ services:
     # Use official Jenkins DinD (Docker-in-Docker) agent
     # Provides SSH connectivity and Docker socket access for CI/CD
     image: jenkins-agentlatest-jdk21
-    build: ./agent
+    build:
+      context: ./agent
+      args:
+        DOCKER_GROUP: ${DOCKER_GROUP}
     restart: unless-stopped
     privileged: true
     volumes:
