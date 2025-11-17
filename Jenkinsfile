@@ -67,7 +67,7 @@ pipeline {
                 sh '''
                   |mkdir -p test-reports
                   |python3 -mvenv ./venv
-                  |source ./venv/bin/activate
+                  |. ./venv/bin/activate
                   |pip install -r requirements-unittest.txt
                   |env PYTHONPATH=src/ pytest tests/test* --junit-xml=test-reports/pytest-result.xml \\
                   |--cov-report term:skip-covered
