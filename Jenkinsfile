@@ -124,8 +124,8 @@ pipeline {
                     steps {
                         sh '''
                           |export DEBIAN_FRONTEND=noninteractive
-                          |apt-get update
-                          |apt-get install output/nids-configurator*_amd64.deb -y
+                          |sudo apt-get update
+                          |sudo apt-get install output/nids-configurator*_amd64.deb -y
                           |python3 -mvenv ./deb_venv
                           |. ./deb_venv/bin/activate
                           |pip install -r requirements-integration.txt
