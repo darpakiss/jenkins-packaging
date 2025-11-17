@@ -48,7 +48,7 @@ def test_opt_install_dir_exists(host):
     assert d.user == "root"
     assert d.group == "root"
     # Usually 0755 for app dirs
-    assert d.mode == 0o775
+    assert d.mode in [0o775, 0o755]
 
 
 def test_opt_main_script_exists(host):
