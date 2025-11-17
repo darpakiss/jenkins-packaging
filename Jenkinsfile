@@ -118,6 +118,7 @@ pipeline {
                     agent {
                         docker {
                             image 'ubuntu-buildenv:latest'
+                            reuseNode true
                         }
                     }
                     steps {
@@ -138,6 +139,7 @@ pipeline {
                     agent {
                         docker {
                             image 'redhat-buildenv:latest'
+                            reuseNode true
                         }
                     }
                     steps {
