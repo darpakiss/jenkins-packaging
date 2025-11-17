@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+DEFAULT_FILE="/etc/default/nids-configurator"
+
+if [ -f "$DEFAULT_FILE" ]; then
+    # shellcheck disable=SC1090
+    source "$DEFAULT_FILE"
+fi
+
+# Ensure the module directory is on PYTHONPATH
+export PYTHONPATH="/opt/nids-configurator:${PYTHONPATH}"
+
+# Execute the module
+exec python3 -m nids_configurator "$@"
+

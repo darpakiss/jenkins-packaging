@@ -1,0 +1,14 @@
+# Set NIDS instance name
+# NDIS_NIDS_NAME="EnvNIDS"
+
+# Comma-separated list of interfaces to monitor
+# NDIS_INTERFACES="eth0,eth1"
+
+# Comma-separated list of IPv4 home networks in CIDR
+# NDIS_IPV4_HOME_NETS="192.168.1.0/24,10.0.0.0/8"
+
+# Logging mode (file, syslog, or both)
+# NDIS_LOG_MODE="both"
+
+# Whether NIDS is enabled by default (true/false)
+# NDIS_ENABLED="true"
