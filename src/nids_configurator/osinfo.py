@@ -1,5 +1,6 @@
-import os
+# import os
 import platform
+
 
 class OSInfo:
     def __init__(self):
