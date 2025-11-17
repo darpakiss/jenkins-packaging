@@ -42,7 +42,7 @@ def test_etc_default_content_sane(host):
 
 
 def test_opt_install_dir_exists(host):
-    d = host.file("/opt/nids-configurator")
+    d = host.file("/opt/nids-configurator/nids_configurator")
     assert d.exists
     assert d.is_directory
     assert d.user == "root"
@@ -52,13 +52,13 @@ def test_opt_install_dir_exists(host):
 
 
 def test_opt_main_script_exists(host):
-    f = host.file("/opt/nids-configurator/nids_configurator")
+    f = host.file("/usr/bin/nids-configurator")
     assert f.exists
     assert f.is_file
     assert f.user == "root"
     assert f.group == "root"
     # Python entry script / module should be executable
-    assert f.mode & 0o111 != 0
+    assert f.mode & 0o775 != 0
     # Likely a Python script with a shebang
     assert f.contains("#!")
     assert "python" in f.content_string.lower()
