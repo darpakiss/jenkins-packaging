@@ -1,4 +1,4 @@
-# nids-configurator
+# NIDS-Configurator
 
 `nids-configurator` is a command-line configuration tool for a Network Intrusion Detection System (NIDS).  
 It does **not** run or manage the NIDS engine itself – it only helps you **create and maintain a YAML config file**.
