@@ -1,5 +1,6 @@
-import pytest
-from unittest.mock import patch, mock_open, MagicMock
+# import pytest
+# from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, mock_open
 from src.nids_configurator.osinfo import OSInfo
 
 
@@ -177,5 +178,3 @@ PRETTY_NAME="Fedora Linux 34"
             patch('builtins.open', mock_open(read_data=os_release_content)):
         os_info = OSInfo()
         assert os_info.family == 'redhat'
-
-

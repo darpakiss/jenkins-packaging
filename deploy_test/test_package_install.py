@@ -69,4 +69,3 @@ def test_cli_help_works(host):
     assert cmd.rc == 0
     # Make sure it’s actually our program
     assert "NIDS" in cmd.stdout or "nids" in cmd.stdout.lower()
-
