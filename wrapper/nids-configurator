@@ -8,7 +8,7 @@ if [ -f "$DEFAULT_FILE" ]; then
 fi
 
 # Ensure the module directory is on PYTHONPATH
-export PYTHONPATH="/opt/ndis_configurator:${PYTHONPATH}"
+export PYTHONPATH="/opt/ndis-configurator:${PYTHONPATH}"
 
 # Execute the module
 exec python3 -m nids_configurator "$@"
