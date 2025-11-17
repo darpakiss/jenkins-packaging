@@ -1,0 +1,5 @@
+git-parameter
+docker-plugin
+docker-workflow
+ansicolor
+pipeline-graph-view
