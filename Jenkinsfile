@@ -123,7 +123,13 @@ pipeline {
                     }
                     steps {
                         sh '''
-                          |echo "Test"
+                          |export DEBIAN_FRONTEND=noninteractive
+                          |apt-get update
+                          |apt-get install output/nids-configurator*_amd64.deb -y
+                          |python3 -mvenv ./deb_venv
+                          |. ./deb_venv/bin/activate
+                          |pip install -r requirements-integration.txt
+                          |py.test -v deploy_test/test_package_install.py
                         '''.stripMargin('|')
                     }
                 }
