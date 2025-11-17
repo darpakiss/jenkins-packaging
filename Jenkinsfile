@@ -38,6 +38,7 @@ pipeline {
                   |tar --strip-components=1 -xJ shellcheck-stable/shellcheck -O > $WORKSPACE/bin/shellcheck
                   |chmod a+x $WORKSPACE/bin/*
                   |gem install fpm
+                  |pip install flake8 --user --break-system-packages
                 '''.stripMargin('|')
             }
         }
@@ -54,6 +55,7 @@ pipeline {
         stage('Check Python Flake8') {
             steps {
                 sh '''
+                  |export PATH="$HOME/.local/bin:$PATH"
                   |for pyfile in $(find ./ -type f -name "*.py");do
                   |  flake8 --verbose "$pyfile"
                   |done
