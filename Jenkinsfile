@@ -39,6 +39,7 @@ pipeline {
                   |chmod a+x $WORKSPACE/bin/*
                   |gem install fpm
                   |pip install flake8 --user --break-system-packages
+                  |mkdir output
                 '''.stripMargin('|')
             }
         }
@@ -88,7 +89,8 @@ pipeline {
                             |cp -av src/nids_configurator deb_pkg/opt/$PKG
                             |fpm -s dir -t deb --name "$PKG" --version "$TIMESTAMP" --description "$DESC" \\
                             |--maintainer "$MAINTAINER" --url "$HPAGE" --vendor "$VENDOR" --category "admin" \\
-                            |--chdir deb_pkg -d python3 -d python3-yaml --package output/
+                            |--chdir deb_pkg -d python3 -d python3-yaml
+                            |mv -v nids-configurator*_amd64.deb output/
                         '''.stripMargin('|')
                     }
                 }
@@ -103,7 +105,8 @@ pipeline {
                             |cp -av src/nids_configurator rpm_pkg/opt/$PKG
                             |fpm -s dir -t rpm --name "$PKG" --version "$TIMESTAMP" --description "$DESC" \\
                             |--maintainer "$MAINTAINER" --url "$HPAGE" --vendor "$VENDOR" --category "admin" \\
-                            |--chdir deb_pkg -d python3 -d python3-pyyaml --package output/
+                            |--chdir deb_pkg -d python3 -d python3-pyyaml
+                            |mv -v nids-configurator*.x86_64.rpm output/
                         '''.stripMargin('|')
                     }
                 }

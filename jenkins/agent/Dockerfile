@@ -7,7 +7,7 @@ ARG DOCKER_VERSION="5:28.5.2-1~debian.13~trixie"
 ARG DOCKER_GROUP="996"
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y wget gpg ca-certificates xz-utils ruby rpm \
+    apt-get install --no-install-recommends -y wget gpg ca-certificates xz-utils ruby rpm binutils \
     python3-pip python3-venv python-is-python3 && \
     source /etc/os-release && \
     wget --no-verbose -O - "${DOCK_URL}/gpg" | gpg --dearmor --no-tty --batch --yes > /etc/apt/trusted.gpg.d/docker.gpg && \
