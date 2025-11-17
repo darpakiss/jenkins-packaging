@@ -130,7 +130,7 @@ pipeline {
                           |python3 -mvenv ./deb_venv
                           |. ./deb_venv/bin/activate
                           |pip install -r requirements-integration.txt
-                          |py.test -v deploy_test/test_package_install.py
+                          |pytest -v deploy_test/test_package_install.py --connection=local
                         '''.stripMargin('|')
                     }
                 }
