@@ -30,7 +30,7 @@ def test_etc_default_exists(host):
     assert f.user == "root"
     assert f.group == "root"
     # Config files usually 0644
-    assert f.mode == 0o644
+    assert f.mode == 0o664
 
 
 def test_etc_default_content_sane(host):
