@@ -1,0 +1,6 @@
+jinja2
+pytest-testinfra
+pytest-parallel
+pytest-cov
+requests
+pyyaml

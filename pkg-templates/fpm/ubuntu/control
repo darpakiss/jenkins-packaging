@@ -1,0 +1,11 @@
+Package: nids-configurator
+Priority: extra
+Section: non-free/net
+Installed-Size: 312110
+Maintainer: John Doe <johndoe@non-gmail.net>
+Architecture: amd64
+Version: VERSION
+Depends: python3, python3-yaml
+Description: NIDS Configurator
+Homepage: https://github.com/darpakiss/jenkins-packaging.git
+

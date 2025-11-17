@@ -15,6 +15,11 @@ pipeline {
     }
     environment {
         DEBIAN_VERSION = '13'
+        PKG = 'nids-configurator'
+        DESC = 'NIDS Configurator'
+        MAINTAINER = 'John Doe <johndoe@non-gmail.net>'
+        VENDOR = 'ACME Corp'
+        HPAGE = 'https://github.com/darpakiss/jenkins-packaging.git'
     }
     agent { label EXECUTOR_LABEL }
     stages {
@@ -26,13 +31,13 @@ pipeline {
                     env.GIT_COMMIT_SHORT = sh(script: "set -x ; git rev-parse --short HEAD", returnStdout: true).trim()
                     env.GIT_COMMIT = sh(script: "set -x ; git rev-parse HEAD", returnStdout: true).trim()
                     env.TIMESTAMP = sh(script: "date '+%Y%m%d-%H%M%S'", returnStdout: true).trim()
-
                 }
                 sh '''
                   |mkdir -p $WORKSPACE/bin
                   |wget -q -O - https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.linux.x86_64.tar.xz | \\
                   |tar --strip-components=1 -xJ shellcheck-stable/shellcheck -O > $WORKSPACE/bin/shellcheck
                   |chmod a+x $WORKSPACE/bin/*
+                  |gem install fpm
                 '''.stripMargin('|')
             }
         }
@@ -46,41 +51,57 @@ pipeline {
                 '''.stripMargin('|')
             }
         }
-        stage('Test Python app') {
+        stage('Check Python Flake8') {
             steps {
                 sh '''
-                  |for shellfile in $(find ./ -type f -name "*.sh");do
-                  |  bash -n "$shellfile"
-                  |  $WORKSPACE/bin/shellcheck "$shellfile"
+                  |for pyfile in $(find ./ -type f -name "*.py");do
+                  |  flake8 --verbose "$pyfile"
                   |done
                 '''.stripMargin('|')
             }
         }
+        stage('Unit Testing Python') {
+            steps {
+                sh '''
+                  |mkdir -p test-reports
+                  |python3 -mvenv ./venv
+                  |source ./venv/bin/activate
+                  |pip install -r requirements-unittest.txt
+                  |env PYTHONPATH=src/ pytest tests/test* --junit-xml=test-reports/pytest-result.xml \\
+                  |--cov-report term:skip-covered
+                '''.stripMargin('|')
+            }
+        }
+
         stage('Build packages') {
             parallel {
                 stage('Ubuntu packaging') {
-                    agent {
-                        docker {
-                            image 'ubuntu-buildenv:latest'
-                            reuseNode true
-                        }
-                    }
                     steps {
                         sh '''
-                             |echo "Build"
+                            |echo "Build"
+                            |PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+                            |mkdir -p deb_pkg/usr/bin/ deb_pkg/etc/default/ deb_pkg/opt/$PKG
+                            |cp -v wrapper/$PKG deb_pkg/usr/bin/
+                            |cp -v wrapper/default deb_pkg/etc/default/$PKG
+                            |cp -av src/nids_configurator deb_pkg/opt/$PKG
+                            |fpm -s dir -t deb --name "$PKG" --version "$TIMESTAMP" --description "$DESC" \\
+                            |--maintainer "$MAINTAINER" --url "$HPAGE" --vendor "$VENDOR" --category "admin" \\
+                            |--chdir deb_pkg -d python3 -d python3-yaml --package output/
                         '''.stripMargin('|')
                     }
                 }
                 stage('RedHat packaging') {
-                    agent {
-                        docker {
-                            image 'redhat-buildenv:latest'
-                            reuseNode true
-                        }
-                    }
                     steps {
                         sh '''
-                          |echo "Build"
+                            |echo "Build"
+                            |PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+                            |mkdir -p rpm_pkg/usr/bin/ rpm_pkg/etc/default/ rpm_pkg/opt/$PKG
+                            |cp -v wrapper/$PKG rpm_pkg/usr/bin/
+                            |cp -v wrapper/default rpm_pkg/etc/default/$PKG
+                            |cp -av src/nids_configurator rpm_pkg/opt/$PKG
+                            |fpm -s dir -t rpm --name "$PKG" --version "$TIMESTAMP" --description "$DESC" \\
+                            |--maintainer "$MAINTAINER" --url "$HPAGE" --vendor "$VENDOR" --category "admin" \\
+                            |--chdir deb_pkg -d python3 -d python3-pyyaml --package output/
                         '''.stripMargin('|')
                     }
                 }
@@ -124,6 +145,7 @@ pipeline {
             '''.stripMargin('|')
         }
         always {
+            junit allowEmptyResults: true, testResults: 'test-reports/*.xml'
             archiveArtifacts allowEmptyArchive: true, artifacts: 'base-version.txt,output/*.deb, output/*.rpm', followSymlinks: false
         }
     }
