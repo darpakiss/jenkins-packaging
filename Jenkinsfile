@@ -130,7 +130,8 @@ pipeline {
                           |python3 -mvenv ./deb_venv
                           |. ./deb_venv/bin/activate
                           |pip install -r requirements-integration.txt
-                          |pytest -v deploy_test/test_package_install.py --connection=local
+                          |pytest -v deploy_test/test_package_install.py --connection=local \\
+                          |--junit-xml=test-reports/testinfra-deb-result.xml
                         '''.stripMargin('|')
                     }
                 }

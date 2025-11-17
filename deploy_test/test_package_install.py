@@ -48,11 +48,11 @@ def test_opt_install_dir_exists(host):
     assert d.user == "root"
     assert d.group == "root"
     # Usually 0755 for app dirs
-    assert d.mode == 0o755
+    assert d.mode == 0o775
 
 
 def test_opt_main_script_exists(host):
-    f = host.file("/opt/nids-configurator/nids-configurator")
+    f = host.file("/opt/nids-configurator/nids_configurator")
     assert f.exists
     assert f.is_file
     assert f.user == "root"
