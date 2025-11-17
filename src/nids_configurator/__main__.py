@@ -120,7 +120,6 @@ def main():
     parser = build_parser(configurator)
     args = parser.parse_args()
 
-
     # Use CLI values to override defaults before running the wizard.
     # The interactive prompts will now show these values as defaults.
     apply_args_to_config(configurator, args)
