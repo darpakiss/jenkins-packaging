@@ -147,8 +147,8 @@ pipeline {
                           |cp -v output/nids-configurator*.x86_64.rpm /tmp
                           |sudo yum makecache
                           |sudo yum install -y /tmp/nids-configurator*.x86_64.rpm -y
-                          |python3 -mvenv ./deb_venv
-                          |. ./deb_venv/bin/activate
+                          |python3 -mvenv ./rpm_venv
+                          |. ./rpm_venv/bin/activate
                           |pip install -r requirements-integration.txt
                           |pytest -v deploy_test/test_package_install.py --connection=local \\\\
                           |--junit-xml=test-reports/testinfra-rpm-result.xml
